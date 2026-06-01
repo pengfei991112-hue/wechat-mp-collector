@@ -90,9 +90,9 @@ Logs go to `run.log`.
 ima.copilot has no public import API yet; its desktop "import web links" box accepts at most 10 links at a time. This tool pre-chunks pending links per account, 10 per batch. `链接清单-待导入.txt` looks like:
 
 ```
-########## 示例公众号B (58 links / 6 batches) ##########
+########## 示例公众号A (58 links / 6 batches) ##########
 
-===== [示例公众号B] batch 1 / 6 (10 links) — copy the 10 lines below =====
+===== [示例公众号A] batch 1 / 6 (10 links) — copy the 10 lines below =====
 https://mp.weixin.qq.com/s/XXXXXXXX
 https://mp.weixin.qq.com/s/YYYYYYYY
 ... (10 lines)
