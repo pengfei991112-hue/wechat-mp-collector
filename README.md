@@ -1,19 +1,31 @@
 # wechat-mp-collector
 
-> 扫码登录一次自己的公众号后台，之后**每天自动**把目标公众号的新推文链接收进素材库——去重、按时间归档、关键词过滤，并切好「10 条一批」方便喂进 [ima 知识库](https://ima.qq.com/) 等下游。
+简体中文 | [English](README.en.md)
+
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)
+![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-lightgrey.svg)
+
+> 扫码登录一次自己的公众号后台，之后**每天自动**把目标公众号的新推文链接收进素材库——去重、按时间归档、关键词过滤，并切成「10 条一批」方便喂进 [ima 知识库](https://ima.qq.com/) 等下游。
 
 借**你自己的微信公众号后台**「搜索其他公众号 / 看其文章」的能力来检索任意公众号的文章列表，因此**全覆盖**那些不被 RSS 收录的号（如各类营销活动号），且免费。接口/参数对齐开源项目 [wechat-article-exporter](https://github.com/jooooock/wechat-article-exporter)。
 
 ```
-扫码登录(一次) → 每天定时拉列表 → 去重 → 关键词过滤 → 素材库 + 链接清单 + 待导入批次 →(手动粘)→ ima 知识库
+扫码登录(一次) → 每天定时拉列表 → 去重 → 关键词过滤 → 素材库 + 链接清单 + 待导入批次 ─(手动粘)→ ima 知识库
 ```
+
+## 适用场景
+
+- 持续追踪一批公众号（如各类品牌活动号）的**营销活动**，自动沉淀成可检索素材库；
+- 把推文链接喂进 ima / 其它知识库做**问答、内容分析、选题参考**；
+- 任何「需要定时、全量、免费地抓取某些公众号文章列表」的个人场景。
 
 ## ✨ 特性
 
-- **一次扫码，长期自动**：登录态写进本地，之后每天 launchd 定时跑，无人值守。
+- **一次扫码，长期自动**：登录态写进本地持久化档案，之后每天 launchd/cron 定时跑，无人值守。
 - **全覆盖任意公众号**：走自己的后台接口搜号，不依赖第三方 RSS 收录。
 - **自动去重**：靠 `state/seen.json`，只入新增。
-- **关键词过滤**：白名单+黑名单，只把"想要的"内容喂进下游（默认配置示例为营销活动 vs 防诈/科普噪音）。
+- **关键词过滤**：白名单 + 黑名单，只把"想要的"内容喂进下游（默认示例区分营销活动 vs 防诈/科普噪音）。
 - **三种产物**：`链接清单.md`（人看）、`链接清单.csv`（机器用）、`链接清单-待导入.txt`（按公众号分块、每 10 条一批，匹配 ima「导入网页链接」框一次最多 10 条的限制）。
 - **已推送追踪**：导完一批 `--done` 标记，下次只列没导过的新链接。
 - **历史回捞**：`backfill.py` 按日期范围补某个号的历史文章。
@@ -24,7 +36,7 @@
 ### 1. 装依赖（一次）
 
 ```bash
-git clone https://github.com/<你的用户名>/wechat-mp-collector.git
+git clone https://github.com/pengfei991112-hue/wechat-mp-collector.git
 cd wechat-mp-collector
 python3 -m pip install -r requirements.txt
 python3 -m playwright install chromium      # 给扫码登录用
@@ -38,7 +50,7 @@ python3 -m playwright install chromium      # 给扫码登录用
 python3 update_session.py
 ```
 
-会弹出浏览器打开公众号后台，**微信扫码登录**即可——脚本自动抓取 token+cookie 写进 `mp_session.json`。登录态会维持一个持久化浏览器档案，几天后过期了再跑一次本命令重扫即可。
+弹出浏览器打开公众号后台，**微信扫码登录**即可——脚本自动抓取 token+cookie 写进 `mp_session.json`。登录态维持在持久化浏览器档案里，几天后过期了再跑一次本命令重扫即可。
 
 > 不想用浏览器自动化？也可手动：复制 `mp_session.example.json` 为 `mp_session.json`，按里面说明从浏览器手抄 token 和 cookie。
 
@@ -60,24 +72,35 @@ python3 collect.py
 - `素材库/<公众号名>/<日期>-<标题>.md` —— 每篇一文件，含标题/链接/发布时间。
 - `素材库/链接清单.md / .csv / -待导入.txt` —— 自动生成的链接清单。
 
-### 5. 每天自动跑（macOS launchd）
+### 5. 每天自动跑
 
+**macOS（launchd）：**
 ```bash
 cp com.example.wxcollect.plist ~/Library/LaunchAgents/com.<你的名字>.wxcollect.plist
 # 编辑该文件，把 /PATH/TO/... 改成你的项目绝对路径、python3 路径
 launchctl load ~/Library/LaunchAgents/com.<你的名字>.wxcollect.plist
 launchctl start com.<你的名字>.wxcollect      # 立即测试一次
 ```
+**Linux（cron）：** `30 9 * * * cd /path/to/wechat-mp-collector && python3 collect.py`
 
-日志在 `run.log`。Linux 用 cron 同理：`30 9 * * * cd /path && python3 collect.py`。
+日志在 `run.log`。
 
 ## 📥 喂给 ima 知识库（手动一步）
 
-ima.copilot 目前没有开放导入 API，PC 客户端「导入网页链接」框一次最多 10 条。本工具把待导入链接切好批次，你照着粘即可：
+ima.copilot 目前没有开放导入 API，PC 客户端「导入网页链接」框一次最多 10 条。本工具把待导入链接按公众号分块、切好 10 条一批，你照着粘即可。`链接清单-待导入.txt` 长这样：
 
-1. 打开 `素材库/链接清单-待导入.txt`，已按公众号分块、每 10 条一批；
-2. 逐批复制 10 行链接，粘进 ima「导入网页链接」框提交；
-3. 全部导完后标记已推送（下次只列新链接）：
+```
+########## 示例公众号B（58 条 / 6 批）##########
+
+===== [示例公众号B] 第 1 批 / 共 6 批（10 条）——复制下面 10 行 =====
+https://mp.weixin.qq.com/s/XXXXXXXX
+https://mp.weixin.qq.com/s/YYYYYYYY
+... (共 10 行)
+```
+
+流程：
+1. 逐批复制 10 行链接，粘进 ima「导入网页链接」框提交；
+2. 全部导完后标记已推送（下次只列新链接）：
    ```bash
    python3 export_links.py --done              # 标记全部
    python3 export_links.py --done 示例公众号A  # 只标某个号
@@ -96,6 +119,15 @@ python3 backfill.py 示例公众号A --since 2025-05-01 --until 2025-06-30
 
 `config.yaml` 的 `filter` 段控制。标题命中 `blacklist`=噪音、不进待导入；但同时命中 `whitelist` 则保留（避免误杀）。**只影响 `链接清单-待导入.txt`**，素材库与清单仍保留全部、并对过滤项标 🚫、CSV 加「类别」列供核对。`enabled: false` 关闭。
 
+## 🛠️ 常见问题
+
+| 提示 | 原因 / 处理 |
+|---|---|
+| `登录态失效` | token/cookie 过期，重跑 `python3 update_session.py` 重扫一次。开了 Bark 会推手机。 |
+| `被限频` | 搜/拉太频繁。等一会儿或明天再跑（日常一天一次没问题，号间已有节流）。 |
+| `没搜到这个号` | `config.yaml` 里的名字不准，换个更接近公众号显示名的写法。 |
+| SSL 报错 | python.org 版 Python 默认无根证书，本项目已用 `certifi` 处理；确保 `pip install -r requirements.txt` 装全。 |
+
 ## 📁 目录结构
 
 ```
@@ -112,16 +144,12 @@ state/                   去重记录 + fakeid 缓存 + 登录档案（自动生
 素材库/                   采集输出（.gitignore）
 ```
 
-## ⏰ 登录态过期怎么办
-
-mp 方案唯一需要你定期做的事：登录态几天一过期。过期后自动任务会停在"登录态失效"（开了 Bark 会推手机），重跑 `python3 update_session.py` 重扫一次即可。
-
 ## ⚠️ 免责声明
 
 - 本工具仅用于**个人学习与自己内容的归档整理**，通过你**本人账号**的公众号后台进行，不涉及任何破解或逆向。
-- 请遵守微信平台规则，**控制频率**（默认一天一次、号间有节流），勿滥用；因使用本工具产生的任何后果由使用者自负。
+- 请遵守微信平台规则，**控制频率**，勿滥用；因使用本工具产生的任何后果由使用者自负。
 - 采集到的文章版权归原作者所有；请勿用于侵权用途或未经授权的再分发。
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE) © 2026 阿飞 (AI产品阿飞)
