@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>自测示例公众号</title>
+    <link>https://example.com</link>
+    <description>用于验证采集管道是否跑通</description>
+    <item>
+      <title>示例推文一：周五五折活动</title>
+      <link>https://mp.weixin.qq.com/s/EXAMPLE0001</link>
+      <guid>https://mp.weixin.qq.com/s/EXAMPLE0001</guid>
+      <pubDate>Mon, 01 Jun 2026 09:00:00 +0800</pubDate>
+      <description>本周五指定商户五折封顶50元。</description>
+      <content:encoded><![CDATA[<p>本周五，在指定商户消费，<strong>五折封顶 50 元</strong>。</p><p>活动详情以官方为准。</p>]]></content:encoded>
+    </item>
+    <item>
+      <title>示例推文二：新用户注册送好礼</title>
+      <link>https://mp.weixin.qq.com/s/EXAMPLE0002</link>
+      <guid>https://mp.weixin.qq.com/s/EXAMPLE0002</guid>
+      <pubDate>Sun, 31 May 2026 18:30:00 +0800</pubDate>
+      <description>新用户首单即送精美礼品。</description>
+      <content:encoded><![CDATA[<p>新用户成功注册并首单下单，即可获得精美礼品一份。</p>]]></content:encoded>
+    </item>
+  </channel>
+</rss>

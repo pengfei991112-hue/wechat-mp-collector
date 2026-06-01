@@ -1,0 +1,100 @@
+# ============================================================
+# wechat-mp-collector —— 配置示例
+# 复制本文件为 config.yaml 再改： cp config.example.yaml config.yaml
+# （config.yaml 已被 .gitignore，含私密项不会提交）
+# ============================================================
+
+# 采集源：mp（公众号后台，全覆盖，需登录态）/ rss（Wechat2RSS 等 RSS 地址）
+source: mp
+
+# 存储后端：local（本地 Markdown）/ feishu（飞书多维表格，骨架待补全）
+storage: local
+
+# 是否抓取并保存正文全文（true 逐篇请求文章页，慢但素材更全；
+# 若正文交给下游 OCR/知识库处理，可设 false 只存链接+元信息，快很多）
+save_full_content: false
+
+# ---------------- mp：公众号后台采集 ----------------
+mp:
+  # 每个号拉几页（每页约 20 篇）。日常增量 1 页足够；想回捞历史用 backfill.py
+  pages: 1
+  # 要盯的公众号名字（程序用它去后台搜号）。名字尽量与公众号显示名一致
+  accounts:
+    - 示例公众号A
+    - 示例公众号B
+    # 按行加更多号即可：
+    # - 示例公众号D
+    # - 示例公众号E
+    # - 示例公众号C
+# 登录态（token + cookie）不放这里，单独放 mp_session.json（见 mp_session.example.json）
+
+# ---------------- 通知（登录态失效 / 有新推文，推手机）----------------
+# 用 Bark(iOS)。不需要可把 enabled 设 false。
+notify:
+  enabled: false
+  bark:
+    # Bark App 首页那串 https://api.day.app/XXXXX 末尾的 XXXXX 就是 key
+    key: "在这里填你的 Bark key"
+    server: "https://api.day.app"      # 用自建 Bark 服务器才改这里
+    sound: "alarm"
+    level: "timeSensitive"             # 时效性通知，锁屏也会提醒
+    group: "公众号采集"
+
+# ---------------- 内容过滤（只把"营销活动"喂进待导入清单）----------------
+# 规则：标题命中 blacklist=非营销噪音→不进待导入；若同时命中 whitelist=营销优先则保留。
+# 只影响"链接清单-待导入.txt"，素材库与清单仍保留全部、并标出类别供核对，不会真删。
+filter:
+  enabled: true
+  blacklist:   # 防诈/科普/科普等非营销内容（按你的领域改）
+    - 防诈
+    - 防诈
+    - 反诈
+    - 诈骗
+    - 科普
+    - 看成语
+    - 说科普
+    - 投资者保护
+    - 代理维权
+    - 黑灰产
+    - 安全提示
+    - 隐私
+    - 网络陷阱
+    - 防范电信
+    - 风险提示
+    - 谨防
+    - 警惕
+  whitelist:   # 营销活动信号词（命中可豁免黑名单误杀）
+    - 折扣
+    - 立减
+    - 返现
+    - 分期
+    - 优惠券
+    - 代金券
+    - 首单
+    - 红包
+    - 满减
+    - 免息
+    - 优惠
+    - 礼
+    - 积分
+    - 权益
+    - 抽
+    - 福利
+    - 联名款
+
+# ---------------- 本地存储 ----------------
+local:
+  output_dir: 素材库
+
+# ---------------- 飞书（以后切换再填）----------------
+feishu:
+  app_id: ""
+  app_secret: ""
+  app_token: ""
+  table_id: ""
+
+# ---------------- rss：备用采集源 ----------------
+# 只有 source: rss 时才用到。把各号的 RSS 地址填这里
+feeds:
+  - name: __自测示例__
+    url: tests/sample_feed.xml

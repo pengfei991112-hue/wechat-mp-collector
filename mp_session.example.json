@@ -1,0 +1,7 @@
+{
+  "_说明": "把下面两项填好后，另存为 mp_session.json（去掉 .example）。这两样会过期，过期后重新登录公众号后台再更新一次即可。",
+  "_怎么拿token": "电脑浏览器登录 https://mp.weixin.qq.com 后，地址栏 URL 里 token=后面那串数字",
+  "_怎么拿cookie": "登录状态下按 F12 → Network 任选一个请求 → 请求头里 Cookie: 后面的一整串，整段复制",
+  "token": "在这里粘贴 token 数字",
+  "cookie": "在这里粘贴整串 cookie"
+}

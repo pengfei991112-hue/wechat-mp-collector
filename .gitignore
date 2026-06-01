@@ -1,0 +1,20 @@
+# 登录态 / 隐私，绝不外传
+mp_session.json
+
+# 个人配置（含 Bark key 等私密项）—— 从 config.example.yaml 复制后本地维护
+config.yaml
+
+# 本机 launchd 任务（含用户名/绝对路径）—— 从 com.example.wxcollect.plist 复制后本地维护
+com.felix.wxcollect.plist
+
+# 运行产物 / 采集数据
+state/
+素材库/
+run.log
+
+# Python
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
