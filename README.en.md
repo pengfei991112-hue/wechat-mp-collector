@@ -17,6 +17,7 @@ QR login (once) → daily scheduled fetch → dedupe → keyword filter → arch
 ## Use cases
 
 - Continuously track a set of Official Accounts (e.g. brands' marketing accounts) for **marketing campaigns**, building a searchable archive;
+- **Especially well-suited to accounts whose posts are almost all images with no text** (long image posts / poster-style) — RSS and text extractors usually capture nothing for these, but this tool still reliably grabs the links and hands them to ima (OCR / image understanding) downstream for search;
 - Feed article links into ima / other knowledge bases for **Q&A, content analysis, topic research**;
 - Any personal scenario that needs to **scheduled, fully, and freely** fetch certain accounts' article lists.
 
