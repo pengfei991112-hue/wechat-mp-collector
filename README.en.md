@@ -134,6 +134,16 @@ Controlled by the `filter` section in `config.yaml`. A title hitting `blacklist`
 - Respect WeChat's platform rules, **keep the frequency low**, and don't abuse it; you bear all consequences of use.
 - Collected articles' copyright belongs to their original authors; do not use for infringement or unauthorized redistribution.
 
+## 👋 About the author
+
+Built by **阿飞 (Aifei)**. On my WeChat Official Account「**AI产品阿飞**」I share hands-on experience with AI products, automation, and productivity tools — this project is one real example.
+
+If it helped you, please ⭐ **Star** the repo. You're also welcome to follow「**AI产品阿飞**」(scan the QR or search it in WeChat) 👇
+
+<p align="center">
+  <img src="assets/follow-aifei.png" alt="WeChat: search AI产品阿飞" width="460">
+</p>
+
 ## License
 
 [MIT](LICENSE) © 2026 阿飞 (AI产品阿飞)
